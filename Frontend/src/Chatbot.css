@@ -41,6 +41,7 @@
     transition: background-color 0.3s, color 0.3s;
   }
   
+  /* Chatbot Size (Resize if needed) */
   .container {
     width: 100%;
     max-width: 600px;

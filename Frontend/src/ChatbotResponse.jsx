@@ -34,11 +34,11 @@ const Chatbot = () => {
     setInput("");
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/check", { title: input });
+      const response = await axios.post("http://localhost:8000/query", { query: input });
       const botResponse =
         language === "id"
-          ? `Keputusan: ${response.data.decision}\nPenjelasan: ${response.data.explanation}\nSkor Kepercayaan: ${response.data.confidence}%`
-          : `Decision: ${response.data.decision}\nExplanation: ${response.data.explanation}\nConfidence Score: ${response.data.confidence}%`;
+          ? `Respon: ${response.data.response}\nKonteks: ${JSON.stringify(response.data.context)}`
+          : `Response: ${response.data.response}\nContext: ${JSON.stringify(response.data.context)}`;
       setMessages([...newMessages, { sender: "bot", text: botResponse }]);
     } catch (error) {
       console.error("Error:", error);
