@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./Chatbot.css";
+import { useTranslation } from "react-i18next"; 
+import './styles/base.css';
+import './styles/theme.css';
+import './styles/layout.css';
+import './styles/chatbox.css';
+import './styles/buttons.css';
+import './styles/inputs.css';
+import './styles/file-upload.css';
 
 const Chatbot = () => {
-  const [language, setLanguage] = useState("id");
-  const [theme, setTheme] = useState("light"); 
+  const [theme, setTheme] = useState("light");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState(null);
+  const { t, i18n } = useTranslation(); 
 
   // Language
   useEffect(() => {
     setMessages([
-      {
-        sender: "bot",
-        text:
-          language === "id"
-            ? "Halo! Saya adalah Chatbot Jago, asisten cerdas yang membantu Anda menganalisis data keuangan."
-            : "Hello! I am Chatbot Jago, your smart assistant for financial data analysis.",
-      },
+      { sender: "bot", text: t("welcomeMessage") },
     ]);
-  }, [language]);
+  }, [t]);
 
   // Initial theme
   useEffect(() => {
@@ -35,30 +37,44 @@ const Chatbot = () => {
     setIsLoading(true);
     try {
       const response = await axios.post("http://localhost:8000/query", { query: input });
-      const botResponse =
-        language === "id"
-          ? `Respon: ${response.data.response}\nKonteks: ${JSON.stringify(response.data.context)}`
-          : `Response: ${response.data.response}\nContext: ${JSON.stringify(response.data.context)}`;
+      const botResponse = t("responseMessage", {
+        response: response.data.response,
+        context: JSON.stringify(response.data.context),
+      });
       setMessages([...newMessages, { sender: "bot", text: botResponse }]);
     } catch (error) {
       console.error("Error:", error);
       setMessages([
         ...newMessages,
-        {
-          sender: "bot",
-          text:
-            language === "id"
-              ? "Maaf, terjadi kesalahan saat memproses permintaan Anda. Coba lagi nanti."
-              : "Sorry, an error occurred while processing your request. Please try again later.",
-        },
+        { sender: "bot", text: t("errorMessage") },
       ]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleFileUpload = async (e) => {
+    const uploadedFile = e.target.files[0];
+    if (!uploadedFile) return;
+    setFile(uploadedFile);
+
+    const formData = new FormData();
+    formData.append("file", uploadedFile);
+
+    try {
+      const response = await axios.post("http://localhost:8000/upload_csv", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert(response.data.message);
+    } catch (error) {
+      console.error("File upload error:", error);
+      alert("Failed to upload and process the file.");
+    }
+  };
+
   const toggleLanguage = () => {
-    setLanguage((prevLang) => (prevLang === "id" ? "en" : "id"));
+    const newLang = i18n.language === "id" ? "en" : "id";
+    i18n.changeLanguage(newLang); 
   };
 
   const toggleTheme = () => {
@@ -71,11 +87,11 @@ const Chatbot = () => {
       <div className="header">
         <div className="title-container">
           <img src="/pictures/jago-icon.png" alt="Jago Icon" className="icon" />
-          <h2 className="title">{language === "id" ? "Chatbot Jago" : "Chatbot Jago"}</h2>
+          <h2 className="title">{t("chatbotTitle")}</h2>
         </div>
         <div className="controls">
           <button onClick={toggleLanguage} className="languageButton">
-            {language === "id" ? "Switch to English" : "Ubah ke Bahasa Indonesia"}
+            {t("switchLanguage")}
           </button>
           <button onClick={toggleTheme} className="themeButton">
             {theme === "light" ? "Dark Mode" : "Light Mode"}
@@ -107,28 +123,29 @@ const Chatbot = () => {
         {isLoading && (
           <div className="message" style={{ justifyContent: "flex-start" }}>
             <div className="bubble" style={{ backgroundColor: "#e5e5e5" }}>
-              {language === "id" ? "Mengetik..." : "Typing..."}
+              {t("loadingMessage")}
             </div>
           </div>
         )}
       </div>
 
-      {/* Input Section */}
-      <div className="inputArea">
+      {/* Input and File Upload Section */}
+      <div className="input-container">
+        <div className="file-upload">
+          <input type="file" accept=".csv" onChange={handleFileUpload} />
+        </div>
+
         <input
           type="text"
-          placeholder={
-            language === "id"
-              ? "Masukan pertanyaan, saya akan membantu menganalisisnya."
-              : "Enter a question, I will help analyze it."
-          }
+          placeholder={t("placeholder")}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           className="input"
         />
+
         <button onClick={handleSend} className="button">
-          {language === "id" ? "Kirim" : "Send"}
+          {t("sendButton")}
         </button>
       </div>
     </div>

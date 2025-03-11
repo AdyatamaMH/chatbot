@@ -10,13 +10,12 @@ from sentence_transformers import SentenceTransformer
 from sklearn.preprocessing import normalize
 from fastapi.middleware.cors import CORSMiddleware
 
-# Initialize FastAPI app
 app = FastAPI()
 
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to specific domains in production
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

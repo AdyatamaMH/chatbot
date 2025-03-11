@@ -1,0 +1,21 @@
+.languageButton,
+.themeButton,
+.button {
+  border-radius: 8px;
+  border: 1px solid var(--secondary-color);
+  padding: 0.6em 1.2em;
+  font-size: 0.9em;
+  font-weight: 600;
+  font-family: inherit;
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.languageButton:hover,
+.themeButton:hover,
+.button:hover {
+  background-color: var(--button-hover);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

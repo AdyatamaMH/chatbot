@@ -1,0 +1,17 @@
+[data-theme="dark"] {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --primary-color: #bb86fc;
+    --secondary-color: #FFCC00;
+    --button-bg: #1e1e1e;
+    --button-hover: #333333;
+  }
+  
+  [data-theme="light"] {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --primary-color: #0078D7;
+    --secondary-color: #FFCC00;
+    --button-bg: #FFCC00;
+    --button-hover: #E5B800;
+  }

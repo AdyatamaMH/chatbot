@@ -1,0 +1,24 @@
+.chatbox {
+    width: 100%; 
+    min-width: 800px; 
+    max-width: 800px; 
+    height: 450px; 
+    overflow-y: auto; 
+    border: 2px solid var(--secondary-color);
+    background-color: var(--background-color);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+  
+  .message {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  
+  .bubble {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 8px;
+    word-wrap: break-word;
+  }

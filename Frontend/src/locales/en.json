@@ -1,0 +1,9 @@
+{
+    "welcomeMessage": "Hello! I am Chatbot Jago, your smart assistant for financial data analysis.",
+    "responseMessage": "Response: {{response}}\nContext: {{context}}",
+    "errorMessage": "Sorry, an error occurred while processing your request. Please try again later.",
+    "placeholder": "Enter a question, I will help analyze it.",
+    "sendButton": "Send",
+    "switchLanguage": "Ubah ke Bahasa Indonesia",
+    "chatbotTitle"  : "Jago Chatbot"
+  }

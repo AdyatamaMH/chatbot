@@ -1,0 +1,39 @@
+.container {
+    width: 100%;
+    max-width: 850px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: var(--background-color);
+    border: 2px solid var(--secondary-color);
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .title-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  
+  .title {
+    font-size: 1.5em;
+    margin: 0;
+    vertical-align: middle;
+  }
+  
+  .controls {
+    display: flex;
+    gap: 10px;
+  }
