@@ -62,16 +62,19 @@ const Chatbot = () => {
     formData.append("file", uploadedFile);
 
     try {
+      setIsLoading(true);
       const response = await axios.post("http://localhost:8000/upload_csv", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert(response.data.message);
+      alert(t("uploadSuccessMessage"));
     } catch (error) {
       console.error("File upload error:", error);
-      alert("Failed to upload and process the file.");
+      alert(t("uploadErrorMessage"));
+    } finally {
+      setIsLoading(false);
     }
   };
-
+  
   const toggleLanguage = () => {
     const newLang = i18n.language === "id" ? "en" : "id";
     i18n.changeLanguage(newLang); 
@@ -144,7 +147,7 @@ const Chatbot = () => {
           className="input"
         />
 
-        <button onClick={handleSend} className="button">
+        <button onClick={handleSend} className="button" disabled={isLoading}>
           {t("sendButton")}
         </button>
       </div>

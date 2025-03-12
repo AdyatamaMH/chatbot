@@ -1,9 +1,12 @@
 {
-    "welcomeMessage": "Halo! Saya adalah Chatbot Jago, asisten cerdas yang membantu Anda menganalisis data keuangan.",
-    "responseMessage": "Respon: {{response}}\nKonteks: {{context}}",
-    "errorMessage": "Maaf, terjadi kesalahan saat memproses permintaan Anda. Coba lagi nanti.",
-    "placeholder": "Masukan pertanyaan, saya akan membantu menganalisisnya.",
-    "sendButton": "Kirim",
-    "switchLanguage": "Switch to English",
-    "chatbotTitle": "Jago Chatbot"
-  }
+  "welcomeMessage": "Halo! Saya adalah Chatbot Jago, asisten cerdas yang membantu Anda menganalisis data keuangan.",
+  "responseMessage": "Respon: {{response}}\nKonteks: {{context}}",
+  "errorMessage": "Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi nanti.",
+  "placeholder": "Masukkan pertanyaan, saya akan membantu menganalisisnya.",
+  "sendButton": "Kirim",
+  "switchLanguage": "Switch to English",
+  "uploadSuccessMessage": "File berhasil diunggah dan diindeks!",
+  "uploadErrorMessage": "Gagal mengunggah dan memproses file.",
+  "loadingMessage": "Sedang diproses...",
+  "chatbotTitle": "Chatbot Jago"
+}

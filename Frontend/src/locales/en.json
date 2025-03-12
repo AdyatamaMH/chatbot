@@ -5,5 +5,9 @@
     "placeholder": "Enter a question, I will help analyze it.",
     "sendButton": "Send",
     "switchLanguage": "Ubah ke Bahasa Indonesia",
+    "uploadSuccessMessage": "File uploaded and indexed successfully!",
+    "uploadErrorMessage": "Failed to upload and process the file.",
+    "loadingMessage": "Processing...",
     "chatbotTitle"  : "Jago Chatbot"
+
   }
