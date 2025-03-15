@@ -80,6 +80,7 @@ const Chatbot = () => {
     i18n.changeLanguage(newLang); 
   };
 
+ //Toggle
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
