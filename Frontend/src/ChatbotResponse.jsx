@@ -14,14 +14,13 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState(null);
   const { t, i18n } = useTranslation(); 
 
   // Language
   useEffect(() => {
-    setMessages([
-      { sender: "bot", text: t("welcomeMessage") },
-    ]);
+    setMessages([{ sender: "bot", text: t("welcomeMessage") }]);
   }, [t]);
 
   // Initial theme
@@ -30,11 +29,12 @@ const Chatbot = () => {
   }, [theme]);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
     const newMessages = [...messages, { sender: "user", text: input }];
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
+
     try {
       const response = await axios.post("http://localhost:8000/query", { query: input });
       const botResponse = t("responseMessage", {
@@ -44,10 +44,7 @@ const Chatbot = () => {
       setMessages([...newMessages, { sender: "bot", text: botResponse }]);
     } catch (error) {
       console.error("Error:", error);
-      setMessages([
-        ...newMessages,
-        { sender: "bot", text: t("errorMessage") },
-      ]);
+      setMessages([...newMessages, { sender: "bot", text: t("errorMessage") }]);
     } finally {
       setIsLoading(false);
     }
@@ -55,15 +52,15 @@ const Chatbot = () => {
 
   const handleFileUpload = async (e) => {
     const uploadedFile = e.target.files[0];
-    if (!uploadedFile) return;
+    if (!uploadedFile || isUploading) return;
     setFile(uploadedFile);
 
     const formData = new FormData();
     formData.append("file", uploadedFile);
 
     try {
-      setIsLoading(true);
-      const response = await axios.post("http://localhost:8000/upload_csv", formData, {
+      setIsUploading(true);
+      await axios.post("http://localhost:8000/upload_csv", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert(t("uploadSuccessMessage"));
@@ -71,16 +68,15 @@ const Chatbot = () => {
       console.error("File upload error:", error);
       alert(t("uploadErrorMessage"));
     } finally {
-      setIsLoading(false);
+      setIsUploading(false);
     }
   };
-  
+
   const toggleLanguage = () => {
     const newLang = i18n.language === "id" ? "en" : "id";
     i18n.changeLanguage(newLang); 
   };
 
- //Toggle
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
@@ -135,9 +131,22 @@ const Chatbot = () => {
 
       {/* Input and File Upload Section */}
       <div className="input-container">
-        <div className="file-upload">
-          <input type="file" accept=".csv" onChange={handleFileUpload} />
-        </div>
+      <div className="file-upload">
+  <input 
+    type="file" 
+    accept=".csv" 
+    onChange={handleFileUpload} 
+    id="file-input" 
+  />
+  <button 
+    onClick={() => document.getElementById("file-input").click()} 
+    className="upload-icon-button"
+    disabled={isUploading}
+  >
+    📂
+  </button>
+</div>
+
 
         <input
           type="text"
@@ -149,7 +158,7 @@ const Chatbot = () => {
         />
 
         <button onClick={handleSend} className="button" disabled={isLoading}>
-          {t("sendButton")}
+          {isLoading ? t("sending") + "..." : t("sendButton")}
         </button>
       </div>
     </div>

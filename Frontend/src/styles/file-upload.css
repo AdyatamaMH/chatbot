@@ -1,13 +1,7 @@
 .file-upload input[type="file"] {
-    border: 2px dashed #0078D7;
-    padding: 10px;
-    cursor: pointer;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    margin: 10px;
-  }
+  display: none; 
+}
+
   
   .file-upload input[type="file"]::file-selector-button {
     background-color: #0078D7;
