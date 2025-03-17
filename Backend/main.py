@@ -29,16 +29,16 @@ INDEX_FOLDER = "index_store"
 INDEX_PATH = os.path.join(INDEX_FOLDER, "csv_index.faiss")
 METADATA_PATH = os.path.join(INDEX_FOLDER, "csv_metadata.json")
 
-# Ensure directories exist
+
 os.makedirs(CSV_FOLDER, exist_ok=True)
 os.makedirs(INDEX_FOLDER, exist_ok=True)
 
 # Load embedding model
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
-dimension = 384  # all-MiniLM-L6-v2 output dimension
+dimension = 384  
 index = faiss.IndexFlatL2(dimension)
 
-# Load existing FAISS index and metadata if available
+
 if os.path.exists(INDEX_PATH) and os.path.exists(METADATA_PATH):
     index = faiss.read_index(INDEX_PATH)
     with open(METADATA_PATH, "r") as f:
