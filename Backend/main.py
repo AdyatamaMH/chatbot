@@ -108,21 +108,31 @@ def extract_query_attributes(query, metadata):
                     print(f"Conversion error for {key}: {e}")
     return extracted_attributes
 
-def retrieve_context(query, top_k=102):
+def retrieve_context(query, metadata, index, embed_model, top_k=None):
     """Retrieves relevant rows based on query embeddings and filters them dynamically."""
+    
     if len(metadata) == 0:
         return None
+
+    max_rows = len(metadata)
+    top_k = (max_rows + 1) if top_k is None else top_k
+
     query_embedding = embed_model.encode([query])
     query_embedding = normalize(query_embedding, norm='l2', axis=1)
+    
     distances, indices = index.search(np.array(query_embedding), top_k)
+    
     retrieved_rows = [metadata[idx] for idx in indices[0]]
+    
     attributes = extract_query_attributes(query, retrieved_rows)
     filtered_rows = retrieved_rows
+
     for attr, value in attributes.items():
         filtered_rows = [
             row for row in filtered_rows
             if row.get(attr) and (row[attr] == value if not isinstance(value, datetime) else datetime.strptime(row[attr], "%Y-%m-%d") == value)
         ]
+
     return filtered_rows[0] if filtered_rows else None
 
 def format_response(context):
