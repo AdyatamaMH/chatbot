@@ -23,17 +23,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Define storage paths
+
 CSV_FOLDER = "data"
 INDEX_FOLDER = "index_store"
 INDEX_PATH = os.path.join(INDEX_FOLDER, "csv_index.faiss")
 METADATA_PATH = os.path.join(INDEX_FOLDER, "csv_metadata.json")
 
-
 os.makedirs(CSV_FOLDER, exist_ok=True)
 os.makedirs(INDEX_FOLDER, exist_ok=True)
 
-# Load embedding model
+
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 dimension = 384  
 index = faiss.IndexFlatL2(dimension)
@@ -71,7 +70,7 @@ def upload_csv(file: UploadFile = File(...)):
         with open(METADATA_PATH, "r") as f:
             existing_metadata = json.load(f)
         
-        # Add new embeddings and extend metadata
+
         index.add(np.array(new_embeddings))
         existing_metadata.extend(df.to_dict(orient="records"))
         
@@ -81,7 +80,7 @@ def upload_csv(file: UploadFile = File(...)):
         index.add(np.array(new_embeddings))
         metadata = df.to_dict(orient="records")
 
-    # Save updated FAISS index and metadata
+
     faiss.write_index(index, INDEX_PATH)
     with open(METADATA_PATH, "w") as f:
         json.dump(metadata, f)
@@ -111,8 +110,9 @@ def extract_query_attributes(query, metadata):
 def retrieve_context(query, metadata, index, embed_model, top_k=None):
     """Retrieves relevant rows based on query embeddings and filters them dynamically."""
     
-    if len(metadata) == 0:
+    if not metadata:
         return None
+
 
     max_rows = len(metadata)
     top_k = (max_rows + 1) if top_k is None else top_k
@@ -120,9 +120,9 @@ def retrieve_context(query, metadata, index, embed_model, top_k=None):
     query_embedding = embed_model.encode([query])
     query_embedding = normalize(query_embedding, norm='l2', axis=1)
     
-    distances, indices = index.search(np.array(query_embedding), top_k)
+    distances, indices = index.search(np.array(query_embedding), min(top_k, len(metadata)))
     
-    retrieved_rows = [metadata[idx] for idx in indices[0]]
+    retrieved_rows = [metadata[idx] for idx in indices[0] if idx < len(metadata)]
     
     attributes = extract_query_attributes(query, retrieved_rows)
     filtered_rows = retrieved_rows
@@ -140,20 +140,20 @@ def format_response(context):
     if not context:
         return "No relevant data found."
     
-    message = (
-        f"On {context['business_date']}, at {context['business_unit']}, "
-        f"the balance tier is {context['balance_tier_description']}, "
-        f"with a total balance of {context['total_balance']:,.2f} IDR. "
-        f"The number of customers in this tier is {context['no_of_customers']}.")
-    return message
+    return (
+        f"On {context.get('business_date', 'Unknown Date')}, at {context.get('business_unit', 'Unknown Unit')}, "
+        f"the balance tier is {context.get('balance_tier_description', 'Unknown')}, "
+        f"with a total balance of {context.get('total_balance', 0):,.2f} IDR. "
+        f"The number of customers in this tier is {context.get('no_of_customers', 0)}."
+    )
 
-# Request model
+
 class QueryRequest(BaseModel):
     query: str
 
 @app.post("/query")
 def generate_response(request: QueryRequest):
-    retrieved_context = retrieve_context(request.query)
+    retrieved_context = retrieve_context(request.query, metadata, index, embed_model)
     formatted_context = format_response(retrieved_context)
     
     input_text = f"Context: {formatted_context} \n Question: {request.query}"
