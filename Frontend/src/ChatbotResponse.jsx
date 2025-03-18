@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; 
 import axios from "axios";
 import { useTranslation } from "react-i18next"; 
 import './styles/base.css';
@@ -99,6 +100,11 @@ const Chatbot = () => {
         </div>
       </div>
 
+      {/* Back to Menu Button */}
+      <div className="menu-back">
+        <Link to="/" className="button">{t("backToMenu")}</Link>
+      </div>
+
       {/* Chatbox Section */}
       <div className="chatbox">
         {messages.map((msg, index) => (
@@ -131,22 +137,21 @@ const Chatbot = () => {
 
       {/* Input and File Upload Section */}
       <div className="input-container">
-      <div className="file-upload">
-  <input 
-    type="file" 
-    accept=".csv" 
-    onChange={handleFileUpload} 
-    id="file-input" 
-  />
-  <button 
-    onClick={() => document.getElementById("file-input").click()} 
-    className="upload-icon-button"
-    disabled={isUploading}
-  >
-    📂
-  </button>
-</div>
-
+        <div className="file-upload">
+          <input 
+            type="file" 
+            accept=".csv" 
+            onChange={handleFileUpload} 
+            id="file-input" 
+          />
+          <button 
+            onClick={() => document.getElementById("file-input").click()} 
+            className="upload-icon-button"
+            disabled={isUploading}
+          >
+            📂
+          </button>
+        </div>
 
         <input
           type="text"

@@ -8,5 +8,7 @@
   "uploadSuccessMessage": "File berhasil diunggah dan diindeks!",
   "uploadErrorMessage": "Gagal mengunggah dan memproses file.",
   "loadingMessage": "Sedang diproses...",
-  "chatbotTitle": "Chatbot Jago"
+  "chatbotTitle": "Chatbot Jago",
+  "backToMenu": "Kembali ke Menu"
+  
 }

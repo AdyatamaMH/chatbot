@@ -8,6 +8,6 @@
     "uploadSuccessMessage": "File uploaded and indexed successfully!",
     "uploadErrorMessage": "Failed to upload and process the file.",
     "loadingMessage": "Processing...",
-    "chatbotTitle"  : "Jago Chatbot"
-
+    "chatbotTitle"  : "Jago Chatbot",
+    "backToMenu": "Back to Menu"
   }
