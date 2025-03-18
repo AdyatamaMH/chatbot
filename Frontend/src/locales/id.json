@@ -8,7 +8,8 @@
   "uploadSuccessMessage": "File berhasil diunggah dan diindeks!",
   "uploadErrorMessage": "Gagal mengunggah dan memproses file.",
   "loadingMessage": "Sedang diproses...",
-  "chatbotTitle": "Chatbot Jago",
+  "chatbotTitle": "Chatbot Jago CSV",
+  "chatbotTitle2": "Chatbot Jago MySQL",
   "backToMenu": "Kembali ke Menu"
   
 }

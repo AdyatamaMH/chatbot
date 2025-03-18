@@ -23,7 +23,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 CSV_FOLDER = "data"
 INDEX_FOLDER = "index_store"
 INDEX_PATH = os.path.join(INDEX_FOLDER, "csv_index.faiss")
@@ -32,11 +31,9 @@ METADATA_PATH = os.path.join(INDEX_FOLDER, "csv_metadata.json")
 os.makedirs(CSV_FOLDER, exist_ok=True)
 os.makedirs(INDEX_FOLDER, exist_ok=True)
 
-
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 dimension = 384  
 index = faiss.IndexFlatL2(dimension)
-
 
 if os.path.exists(INDEX_PATH) and os.path.exists(METADATA_PATH):
     index = faiss.read_index(INDEX_PATH)
@@ -69,7 +66,6 @@ def upload_csv(file: UploadFile = File(...)):
         index = faiss.read_index(INDEX_PATH)
         with open(METADATA_PATH, "r") as f:
             existing_metadata = json.load(f)
-        
 
         index.add(np.array(new_embeddings))
         existing_metadata.extend(df.to_dict(orient="records"))
@@ -79,7 +75,6 @@ def upload_csv(file: UploadFile = File(...)):
         index = faiss.IndexFlatL2(dimension)
         index.add(np.array(new_embeddings))
         metadata = df.to_dict(orient="records")
-
 
     faiss.write_index(index, INDEX_PATH)
     with open(METADATA_PATH, "w") as f:
@@ -112,7 +107,6 @@ def retrieve_context(query, metadata, index, embed_model, top_k=None):
     
     if not metadata:
         return None
-
 
     max_rows = len(metadata)
     top_k = (max_rows + 1) if top_k is None else top_k
@@ -147,6 +141,11 @@ def format_response(context):
         f"The number of customers in this tier is {context.get('no_of_customers', 0)}."
     )
 
+def format_response_text(response_text):
+    """Formats response text for better readability."""
+    formatted_text = re.sub(r"(\d+\.)\s*", r"\n\1 ", response_text)
+
+    return formatted_text.strip()
 
 class QueryRequest(BaseModel):
     query: str
@@ -160,6 +159,11 @@ def generate_response(request: QueryRequest):
     
     try:
         response = ollama.chat(model='mistral', messages=[{"role": "user", "content": input_text}])
-        return {"response": response['message']['content'], "context": formatted_context}
+        formatted_response = format_response_text(response['message']['content'])
+        
+        return {
+            "response": formatted_response,
+            "context": formatted_context
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

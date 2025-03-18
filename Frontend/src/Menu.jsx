@@ -12,6 +12,7 @@ const Menu = () => {
           <strong>Manual</strong>
           <ul>
             <li><Link className="menu-button" to="/chatbot">📂 CSV file</Link></li>
+            <li><Link className="menu-button" to="/chatbot2">🐬 MySQL</Link></li>
           </ul>
         </li>
         <li>
