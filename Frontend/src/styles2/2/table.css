@@ -1,0 +1,26 @@
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.custom-table th {
+    background-color: #ffcc00;
+    font-weight: bold;
+}
+
+.custom-table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+
+.custom-selected {
+    background-color: #0078D7 !important;
+    color: white;
+}

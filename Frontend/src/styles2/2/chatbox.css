@@ -1,0 +1,55 @@
+.custom-chatbox {
+    width: 100%; 
+    min-width: 800px; 
+    max-width: 800px; 
+    height: 450px; 
+    overflow-y: auto; 
+    border: 2px solid var(--secondary-color);
+    background-color: var(--background-color);
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Chat message wrapper */
+.custom-message {
+    display: flex;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+/* Chat bubble container */
+.custom-bubble {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 8px;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+/* User messages */
+.user-message {
+    justify-content: flex-end; /* Align to right */
+}
+
+.user-message .custom-bubble {
+    background-color: #ffcc00; /* Yellow */
+    color: black;
+    text-align: left;
+    border-radius: 8px 8px 0px 8px;
+    align-self: flex-end;
+}
+
+/* AI messages */
+.bot-message {
+    justify-content: flex-start; /* Align to left */
+}
+
+.bot-message .custom-bubble {
+    background-color: #e6e6e6; /* Light gray */
+    color: black;
+    text-align: left;
+    border-radius: 8px 8px 8px 0px;
+    align-self: flex-start;
+}

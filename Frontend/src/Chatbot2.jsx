@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import './styles2/2/theme.css';
 import './styles2/2/layout.css';
 import './styles2/2/chatbox.css';
 import './styles2/2/buttons.css';
@@ -80,64 +79,62 @@ const Chatbot = () => {
   return (
     <>
       {/* Top Navigation Bar */}
-      <div className="top-bar">
-        <Link to="/" className="button">{t("backToMenu")}</Link>
-        <div className="controls">
-          <button onClick={toggleLanguage} className="button">{t("switchLanguage")}</button>
-          <button onClick={toggleTheme} className="button">
+      <div className="custom-top-bar">
+        <Link to="/" className="custom-button">{t("backToMenu")}</Link>
+        <div className="custom-controls">
+          <button onClick={toggleLanguage} className="custom-button">{t("switchLanguage")}</button>
+          <button onClick={toggleTheme} className="custom-button">
             {theme === "light" ? "Dark Mode" : "Light Mode"}
           </button>
         </div>
       </div>
 
       {/* Split Container for Chatbox and MySQL Table */}
-      <div className="split-container">
+      <div className="custom-split-container">
         {/* Left: Chatbox */}
-        <div className="chat-container">
-          <div className="header">
-            <div className="title-container">
-              <img src="/pictures/jago-icon.png" alt="Jago Icon" className="icon" />
-              <h2 className="title">{t("chatbotTitle2")}</h2>
+        <div className="custom-chat-container">
+          <div className="custom-header">
+            <div className="custom-title-container">
+              <img src="/pictures/jago-icon.png" alt="Jago Icon" className="custom-icon" />
+              <h2 className="custom-title">{t("chatbotTitle2")}</h2>
             </div>
           </div>
 
-          <div className="chatbox">
+          <div className="custom-chatbox">
             {messages.map((msg, index) => (
-              <div key={index} className="message" style={{ justifyContent: msg.sender === "user" ? "flex-end" : "flex-start" }}>
-                <div className="bubble" style={{
-                  backgroundColor: msg.sender === "user" ? "#0078D7" : "#e5e5e5",
-                  color: msg.sender === "user" ? "#fff" : "#000"
-                }}>
-                  {msg.text}
-                </div>
+              <div 
+                key={index} 
+                className={`custom-message ${msg.sender === "user" ? "user-message" : "bot-message"}`}
+              >
+                <div className="custom-bubble">{msg.text}</div>
               </div>
             ))}
             {isLoading && (
-              <div className="message" style={{ justifyContent: "flex-start" }}>
-                <div className="bubble" style={{ backgroundColor: "#e5e5e5" }}>{t("loadingMessage")}</div>
+              <div className="custom-message bot-message">
+                <div className="custom-bubble">{t("loadingMessage")}</div>
               </div>
             )}
           </div>
 
-          <div className="input-container">
+          <div className="custom-input-container">
             <input
               type="text"
               placeholder={t("placeholder")}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              className="input"
+              className="custom-input"
             />
-            <button onClick={handleSend} className="button" disabled={isLoading}>
+            <button onClick={handleSend} className="custom-button" disabled={isLoading}>
               {isLoading ? t("sending") + "..." : t("sendButton")}
             </button>
           </div>
         </div>
 
         {/* Right: MySQL Table Viewer */}
-        <div className="table-container">
-          <h3>{t("mysqlTableTitle")}</h3>
-          <table>
+        <div className="custom-table-container">
+          <h3 className="custom-table-title">{t("mysqlTableTitle")}</h3>
+          <table className="custom-table">
             <thead>
               <tr>
                 <th>{t("select")}</th>
@@ -148,7 +145,11 @@ const Chatbot = () => {
             </thead>
             <tbody>
               {tableData.map((row, index) => (
-                <tr key={index} onClick={() => handleRowSelect(row)} className={selectedRows.includes(row) ? "selected" : ""}>
+                <tr 
+                  key={index} 
+                  onClick={() => handleRowSelect(row)} 
+                  className={selectedRows.includes(row) ? "custom-selected" : ""}
+                >
                   <td>
                     <input 
                       type="checkbox" 

@@ -10,6 +10,7 @@
   "loadingMessage": "Sedang diproses...",
   "chatbotTitle": "Chatbot Jago CSV",
   "chatbotTitle2": "Chatbot Jago MySQL",
-  "backToMenu": "Kembali ke Menu"
+  "backToMenu": "Kembali ke Menu",
+  "mysqlTableTitle": "Tabel MySQL"
   
 }
