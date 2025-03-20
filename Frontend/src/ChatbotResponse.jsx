@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; 
 import axios from "axios";
 import { useTranslation } from "react-i18next"; 
-import './styles/base.css';
-import './styles/theme.css';
-import './styles/layout.css';
-import './styles/chatbox.css';
-import './styles/buttons.css';
-import './styles/inputs.css';
-import './styles/file-upload.css';
+import './styles/1/base.css';
+import './styles/1/theme.css';
+import './styles/1/layout.css';
+import './styles/1/chatbox.css';
+import './styles/1/buttons.css';
+import './styles/1/inputs.css';
+import './styles/1/file-upload.css';
 
 const Chatbot = () => {
   const [theme, setTheme] = useState("light");
@@ -83,90 +83,91 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="container">
-      {/* Header Section */}
-      <div className="header">
-        <div className="title-container">
-          <img src="/pictures/jago-icon.png" alt="Jago Icon" className="icon" />
-          <h2 className="title">{t("chatbotTitle")}</h2>
-        </div>
+    <>
+      {/* Top Navigation Bar */}
+      <div className="top-bar">
+        <Link to="/" className="button">{t("backToMenu")}</Link>
         <div className="controls">
-          <button onClick={toggleLanguage} className="languageButton">
-            {t("switchLanguage")}
-          </button>
-          <button onClick={toggleTheme} className="themeButton">
+          <button onClick={toggleLanguage} className="button">{t("switchLanguage")}</button>
+          <button onClick={toggleTheme} className="button">
             {theme === "light" ? "Dark Mode" : "Light Mode"}
           </button>
         </div>
       </div>
-
-      {/* Back to Menu Button */}
-      <div className="menu-back">
-        <Link to="/" className="button">{t("backToMenu")}</Link>
-      </div>
-
-      {/* Chatbox Section */}
-      <div className="chatbox">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className="message"
-            style={{
-              justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-            }}
-          >
+  
+      {/* Main Chatbot Container */}
+      <div className="container" style={{ marginTop: "60px" }}>
+        {/* Header Section */}
+        <div className="header">
+          <div className="title-container">
+            <img src="/pictures/jago-icon.png" alt="Jago Icon" className="icon" />
+            <h2 className="title">{t("chatbotTitle")}</h2>
+          </div>
+        </div>
+  
+        {/* Chatbox Section */}
+        <div className="chatbox">
+          {messages.map((msg, index) => (
             <div
-              className="bubble"
+              key={index}
+              className="message"
               style={{
-                backgroundColor: msg.sender === "user" ? "#0078D7" : "#e5e5e5",
-                color: msg.sender === "user" ? "#fff" : "#000",
+                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
               }}
             >
-              {msg.text}
+              <div
+                className="bubble"
+                style={{
+                  backgroundColor: msg.sender === "user" ? "#0078D7" : "#e5e5e5",
+                  color: msg.sender === "user" ? "#fff" : "#000",
+                }}
+              >
+                {msg.text}
+              </div>
             </div>
-          </div>
-        ))}
-        {isLoading && (
-          <div className="message" style={{ justifyContent: "flex-start" }}>
-            <div className="bubble" style={{ backgroundColor: "#e5e5e5" }}>
-              {t("loadingMessage")}
+          ))}
+          {isLoading && (
+            <div className="message" style={{ justifyContent: "flex-start" }}>
+              <div className="bubble" style={{ backgroundColor: "#e5e5e5" }}>
+                {t("loadingMessage")}
+              </div>
             </div>
+          )}
+        </div>
+  
+        {/* Input and File Upload Section */}
+        <div className="input-container">
+          <div className="file-upload">
+            <input 
+              type="file" 
+              accept=".csv" 
+              onChange={handleFileUpload} 
+              id="file-input" 
+            />
+            <button 
+              onClick={() => document.getElementById("file-input").click()} 
+              className="upload-icon-button"
+              disabled={isUploading}
+            >
+              📂
+            </button>
           </div>
-        )}
-      </div>
-
-      {/* Input and File Upload Section */}
-      <div className="input-container">
-        <div className="file-upload">
-          <input 
-            type="file" 
-            accept=".csv" 
-            onChange={handleFileUpload} 
-            id="file-input" 
+  
+          <input
+            type="text"
+            placeholder={t("placeholder")}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            className="input"
           />
-          <button 
-            onClick={() => document.getElementById("file-input").click()} 
-            className="upload-icon-button"
-            disabled={isUploading}
-          >
-            📂
+  
+          <button onClick={handleSend} className="button" disabled={isLoading}>
+            {isLoading ? t("sending") + "..." : t("sendButton")}
           </button>
         </div>
-
-        <input
-          type="text"
-          placeholder={t("placeholder")}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          className="input"
-        />
-
-        <button onClick={handleSend} className="button" disabled={isLoading}>
-          {isLoading ? t("sending") + "..." : t("sendButton")}
-        </button>
       </div>
-    </div>
+    </>
   );
 };
 
