@@ -39,7 +39,7 @@ const Chatbot = () => {
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
-    
+
     const newMessages = [...messages, { sender: "user", text: input }];
     setMessages(newMessages);
     setInput("");
@@ -48,8 +48,9 @@ const Chatbot = () => {
     try {
       const response = await axios.post("http://localhost:8000/query_mysql", { 
         query: input, 
-        selectedRows 
+        selectedRows: selectedRows.map(row => row.id) // Send only row IDs
       });
+
       const botResponse = response.data.response || t("noResponseMessage");
       setMessages([...newMessages, { sender: "bot", text: botResponse }]);
     } catch (error) {
@@ -72,7 +73,9 @@ const Chatbot = () => {
   // Handle Row Selection
   const handleRowSelect = (row) => {
     setSelectedRows((prev) =>
-      prev.includes(row) ? prev.filter((r) => r !== row) : [...prev, row]
+      prev.some((r) => r.id === row.id) 
+        ? prev.filter((r) => r.id !== row.id) 
+        : [...prev, row]
     );
   };
 
@@ -148,12 +151,12 @@ const Chatbot = () => {
                 <tr 
                   key={index} 
                   onClick={() => handleRowSelect(row)} 
-                  className={selectedRows.includes(row) ? "custom-selected" : ""}
+                  className={selectedRows.some((r) => r.id === row.id) ? "custom-selected" : ""}
                 >
                   <td>
                     <input 
                       type="checkbox" 
-                      checked={selectedRows.includes(row)} 
+                      checked={selectedRows.some((r) => r.id === row.id)} 
                       onChange={() => handleRowSelect(row)} 
                     />
                   </td>
