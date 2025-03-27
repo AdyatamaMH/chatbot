@@ -14,8 +14,6 @@ const Chatbot = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { t, i18n } = useTranslation();
-
-  // MySQL Data States
   const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -30,6 +28,7 @@ const Chatbot = () => {
 
   const fetchTableData = async () => {
     try {
+      await axios.get("http://localhost:8000/index_mysql");
       const response = await axios.get("http://localhost:8000/get_mysql_data");
       setTableData(response.data);
     } catch (error) {
@@ -46,9 +45,9 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/query_mysql", { 
+      const response = await axios.post("http://localhost:8000/query_mysql_ai", { 
         query: input, 
-        selectedRows: selectedRows.map(row => row.id) // Send only row IDs
+        selectedRows: selectedRows.map(row => row.id) 
       });
 
       const botResponse = response.data.response || t("noResponseMessage");
@@ -70,7 +69,6 @@ const Chatbot = () => {
     setTheme(prevTheme => (prevTheme === "light" ? "dark" : "light"));
   };
 
-  // Handle Row Selection
   const handleRowSelect = (row) => {
     setSelectedRows((prev) =>
       prev.some((r) => r.id === row.id) 
@@ -81,7 +79,6 @@ const Chatbot = () => {
 
   return (
     <>
-      {/* Top Navigation Bar */}
       <div className="custom-top-bar">
         <Link to="/" className="custom-button">{t("backToMenu")}</Link>
         <div className="custom-controls">
@@ -92,9 +89,7 @@ const Chatbot = () => {
         </div>
       </div>
 
-      {/* Split Container for Chatbox and MySQL Table */}
       <div className="custom-split-container">
-        {/* Left: Chatbox */}
         <div className="custom-chat-container">
           <div className="custom-header">
             <div className="custom-title-container">
@@ -134,9 +129,10 @@ const Chatbot = () => {
           </div>
         </div>
 
-        {/* Right: MySQL Table Viewer */}
         <div className="custom-table-container">
           <h3 className="custom-table-title">{t("mysqlTableTitle")}</h3>
+          <button onClick={fetchTableData} className="custom-button">{t("refreshData")}</button>
+          
           <table className="custom-table">
             <thead>
               <tr>
