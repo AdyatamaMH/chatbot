@@ -28,13 +28,13 @@ const Chatbot = () => {
 
   const fetchTableData = async () => {
     try {
-      await axios.get("http://localhost:8000/index_mysql");
       const response = await axios.get("http://localhost:8000/get_mysql_data");
       setTableData(response.data);
     } catch (error) {
       console.error("Error fetching table data:", error);
     }
   };
+  
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
