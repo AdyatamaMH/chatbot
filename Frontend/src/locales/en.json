@@ -12,5 +12,8 @@
     "chatbotTitle2"  : "Jago Chatbot MySQL",
     "backToMenu": "Back to Menu",
     "mysqlTableTitle": "MySQL Table",
-    "refreshData": "Refresh Data"
+    "refreshData": "Refresh Data",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All"
+
   }

@@ -40,6 +40,10 @@ const Chatbot = () => {
     await fetchTableData();
   };
 
+  const selectAllRows = () => {
+    setSelectedRows(tableData);
+  };
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -135,7 +139,11 @@ const Chatbot = () => {
 
         <div className="custom-table-container">
           <h3 className="custom-table-title">{t("mysqlTableTitle")}</h3>
-          <button onClick={refreshTable} className="custom-button">{t("refreshData")}</button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button onClick={refreshTable} className="custom-button">{t("refreshData")}</button>
+            <button onClick={selectAllRows} className="custom-button">{t("selectAll")}</button>
+            <button onClick={() => setSelectedRows([])} className="custom-button">{t("deselectAll")}</button>
+          </div>
 
           <table className="custom-table">
             <thead>

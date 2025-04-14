@@ -12,6 +12,7 @@
   "chatbotTitle2": "Chatbot Jago MySQL",
   "backToMenu": "Kembali ke Menu",
   "mysqlTableTitle": "Tabel MySQL",
-  "refreshData": "Memperbarui Data"
-  
+  "refreshData": "Memperbarui Data",
+  "selectAll": "Pilih Semua",
+  "deselectAll": "Batalkan Pilihan"
 }
