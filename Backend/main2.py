@@ -5,6 +5,7 @@ from pydantic import BaseModel
 import mysql.connector
 from dotenv import load_dotenv
 
+# Load environment variables from credentials.env
 load_dotenv("credentials.env")
 
 DB_CONFIG = {
@@ -15,7 +16,6 @@ DB_CONFIG = {
 }
 
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Function to get database connection
 def get_db_connection():
     try:
         return mysql.connector.connect(
@@ -38,6 +39,7 @@ def get_db_connection():
         print("Database connection error:", err)
         return None
 
+# GET endpoint to fetch data from MySQL
 @app.get("/get_mysql_data")
 def get_mysql_data():
     conn = get_db_connection()
@@ -46,15 +48,14 @@ def get_mysql_data():
 
     cursor = conn.cursor(dictionary=True)
     try:
-        cursor.execute(
-            "SELECT actor_id AS id, first_name AS column1, last_name AS column2, last_update AS column3 FROM actor"
-        )
+        cursor.execute("SELECT actor_id, first_name, last_name, last_update FROM actor")
         results = cursor.fetchall()
         return results
     finally:
         cursor.close()
         conn.close()
 
+# POST endpoint for future AI-powered queries
 class QueryRequest(BaseModel):
     query: str
     selectedRows: list[int]

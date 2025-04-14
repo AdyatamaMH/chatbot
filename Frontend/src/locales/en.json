@@ -11,5 +11,6 @@
     "chatbotTitle"  : "Jago Chatbot CSV",
     "chatbotTitle2"  : "Jago Chatbot MySQL",
     "backToMenu": "Back to Menu",
-    "mysqlTableTitle": "MySQL Table"
+    "mysqlTableTitle": "MySQL Table",
+    "refreshData": "Refresh Data"
   }

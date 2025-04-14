@@ -11,6 +11,7 @@
   "chatbotTitle": "Chatbot Jago CSV",
   "chatbotTitle2": "Chatbot Jago MySQL",
   "backToMenu": "Kembali ke Menu",
-  "mysqlTableTitle": "Tabel MySQL"
+  "mysqlTableTitle": "Tabel MySQL",
+  "refreshData": "Memperbarui Data"
   
 }
