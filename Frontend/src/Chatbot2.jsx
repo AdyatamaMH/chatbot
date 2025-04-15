@@ -44,29 +44,29 @@ const Chatbot = () => {
     setSelectedRows(tableData);
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+const handleSend = async () => {
+  if (!input.trim() || isLoading) return;
 
-    const newMessages = [...messages, { sender: "user", text: input }];
-    setMessages(newMessages);
-    setInput("");
-    setIsLoading(true);
+  const newMessages = [...messages, { sender: "user", text: input }];
+  setMessages(newMessages);
+  setInput("");
+  setIsLoading(true);
 
-    try {
-      const response = await axios.post("http://localhost:8000/query_mysql_ai", {
-        query: input,
-        selectedRows: selectedRows.map(row => row.actor_id)
-      });
+  try {
+    const response = await axios.post("http://localhost:8000/query_mysql_ai", {
+      query: input,
+      selectedRows: selectedRows
+    });
 
-      const botResponse = response.data.response || t("noResponseMessage");
-      setMessages([...newMessages, { sender: "bot", text: botResponse }]);
-    } catch (error) {
-      console.error("Error fetching response:", error);
-      setMessages([...newMessages, { sender: "bot", text: t("errorMessage") }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const botResponse = response.data.response || t("noResponseMessage");
+    setMessages([...newMessages, { sender: "bot", text: botResponse }]);
+  } catch (error) {
+    console.error("Error fetching response:", error);
+    setMessages([...newMessages, { sender: "bot", text: t("errorMessage") }]);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "id" ? "en" : "id";

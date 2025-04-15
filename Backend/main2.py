@@ -1,11 +1,12 @@
 import os
+import requests
+import mysql.connector
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import mysql.connector
-from dotenv import load_dotenv
+from typing import List, Dict
 
-# Load environment variables from credentials.env
 load_dotenv("credentials.env")
 
 DB_CONFIG = {
@@ -24,7 +25,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Function to get database connection
 def get_db_connection():
     try:
         return mysql.connector.connect(
@@ -32,14 +32,13 @@ def get_db_connection():
             user=DB_CONFIG["user"],
             password=DB_CONFIG["password"],
             database=DB_CONFIG["database"],
-            use_pure=True,
-            unix_socket=None
+            use_pure=True
         )
     except mysql.connector.Error as err:
         print("Database connection error:", err)
         return None
 
-# GET endpoint to fetch data from MySQL
+# Endpoint: Fetch all MySQL rows
 @app.get("/get_mysql_data")
 def get_mysql_data():
     conn = get_db_connection()
@@ -55,22 +54,46 @@ def get_mysql_data():
         cursor.close()
         conn.close()
 
-# POST endpoint for future AI-powered queries
 class QueryRequest(BaseModel):
     query: str
-    selectedRows: list[int]
+    selectedRows: List[Dict] 
 
+# Endpoint: Chat + selected data → Mistral
 @app.post("/query_mysql_ai")
 def query_mysql_ai(request: QueryRequest):
     if not request.query:
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
-    
-    response_text = (
-        f"You asked: '{request.query}'\n"
-        f"You selected {len(request.selectedRows)} row(s): {request.selectedRows}"
-    )
-    
+
+    if not request.selectedRows:
+        context = "No data was selected."
+    else:
+        context_lines = [
+            f"Row {i+1}: " + ", ".join(f"{k}: {v}" for k, v in row.items())
+            for i, row in enumerate(request.selectedRows)
+        ]
+        context = "\n".join(context_lines)
+
+    prompt = f"""Context:
+{context}
+
+Question:
+{request.query}
+"""
+
+    # Send to Ollama (Mistral)
+    try:
+        response = requests.post("http://localhost:11434/api/generate", json={
+            "model": "mistral",
+            "prompt": prompt,
+            "stream": False
+        })
+        response.raise_for_status()
+        ai_response = response.json().get("response", "No response from Mistral.")
+    except Exception as e:
+        print("Ollama/Mistral error:", e)
+        raise HTTPException(status_code=500, detail="AI model error.")
+
     return {
-        "response": response_text,
-        "context": "No AI processing yet — just a test connection."
+        "response": ai_response,
+        "context": context
     }
