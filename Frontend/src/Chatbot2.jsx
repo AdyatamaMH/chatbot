@@ -16,57 +16,73 @@ const Chatbot = () => {
   const { t, i18n } = useTranslation();
   const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [tableList, setTableList] = useState([]);
+  const [currentTableIndex, setCurrentTableIndex] = useState(0);
 
   useEffect(() => {
     setMessages([{ sender: "bot", text: t("welcomeMessage") }]);
-    fetchTableData();
+    fetchTableList();
   }, [t]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  const fetchTableData = async () => {
+  useEffect(() => {
+    if (tableList.length > 0) fetchTableData(tableList[currentTableIndex]);
+  }, [tableList, currentTableIndex]);
+
+  const fetchTableList = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/get_mysql_data");
+      const response = await axios.get("http://localhost:8000/get_table_list");
+      setTableList(response.data);
+    } catch (error) {
+      console.error("Error fetching table list:", error);
+    }
+  };
+
+  const fetchTableData = async (tableName) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/get_mysql_data/${tableName}`);
       setTableData(response.data);
+      setSelectedRows([]);
     } catch (error) {
       console.error("Error fetching table data:", error);
     }
   };
 
-  const refreshTable = async () => {
-    setSelectedRows([]);
-    await fetchTableData();
+  const refreshTable = () => {
+    if (tableList.length > 0) {
+      fetchTableData(tableList[currentTableIndex]);
+    }
   };
 
   const selectAllRows = () => {
     setSelectedRows(tableData);
   };
 
-const handleSend = async () => {
-  if (!input.trim() || isLoading) return;
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+    const newMessages = [...messages, { sender: "user", text: input }];
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
 
-  const newMessages = [...messages, { sender: "user", text: input }];
-  setMessages(newMessages);
-  setInput("");
-  setIsLoading(true);
+    try {
+      const response = await axios.post("http://localhost:8000/query_mysql_ai", {
+        query: input,
+        selectedRows: selectedRows
+      });
 
-  try {
-    const response = await axios.post("http://localhost:8000/query_mysql_ai", {
-      query: input,
-      selectedRows: selectedRows
-    });
-
-    const botResponse = response.data.response || t("noResponseMessage");
-    setMessages([...newMessages, { sender: "bot", text: botResponse }]);
-  } catch (error) {
-    console.error("Error fetching response:", error);
-    setMessages([...newMessages, { sender: "bot", text: t("errorMessage") }]);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const botResponse = response.data.response || t("noResponseMessage");
+      setMessages([...newMessages, { sender: "bot", text: botResponse }]);
+    } catch (error) {
+      console.error("Error fetching response:", error);
+      setMessages([...newMessages, { sender: "bot", text: t("errorMessage") }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "id" ? "en" : "id";
@@ -79,10 +95,22 @@ const handleSend = async () => {
 
   const handleRowSelect = (row) => {
     setSelectedRows((prev) =>
-      prev.some((r) => r.actor_id === row.actor_id)
-        ? prev.filter((r) => r.actor_id !== row.actor_id)
+      prev.some((r) => r.id === row.id)
+        ? prev.filter((r) => r.id !== row.id)
         : [...prev, row]
     );
+  };
+
+  const goToNextTable = () => {
+    if (tableList.length > 0) {
+      setCurrentTableIndex((prev) => (prev + 1) % tableList.length);
+    }
+  };
+
+  const goToPreviousTable = () => {
+    if (tableList.length > 0) {
+      setCurrentTableIndex((prev) => (prev - 1 + tableList.length) % tableList.length);
+    }
   };
 
   return (
@@ -139,11 +167,6 @@ const handleSend = async () => {
 
         <div className="custom-table-container">
           <h3 className="custom-table-title">{t("mysqlTableTitle")}</h3>
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button onClick={refreshTable} className="custom-button">{t("refreshData")}</button>
-            <button onClick={selectAllRows} className="custom-button">{t("selectAll")}</button>
-            <button onClick={() => setSelectedRows([])} className="custom-button">{t("deselectAll")}</button>
-          </div>
 
           <table className="custom-table">
             <thead>
@@ -151,7 +174,7 @@ const handleSend = async () => {
                 <th>{t("select")}</th>
                 {tableData.length > 0 &&
                   Object.keys(tableData[0])
-                    .filter(key => key !== "actor_id")
+                    .filter(key => key !== "id")
                     .map((key) => <th key={key}>{key}</th>)
                 }
               </tr>
@@ -161,12 +184,12 @@ const handleSend = async () => {
                 <tr
                   key={index}
                   onClick={() => handleRowSelect(row)}
-                  className={selectedRows.some(r => r.actor_id === row.actor_id) ? "custom-selected" : ""}
+                  className={selectedRows.some(r => r.id === row.id) ? "custom-selected" : ""}
                 >
                   <td>
                     <input
                       type="checkbox"
-                      checked={selectedRows.some(r => r.actor_id === row.actor_id)}
+                      checked={selectedRows.some(r => r.id === row.id)}
                       onChange={(e) => {
                         e.stopPropagation();
                         handleRowSelect(row);
@@ -174,13 +197,20 @@ const handleSend = async () => {
                     />
                   </td>
                   {Object.keys(row)
-                    .filter(key => key !== "actor_id")
-                    .map((key) => <td key={key}>{row[key]}</td>)
-                  }
+                    .filter(key => key !== "id")
+                    .map((key) => <td key={key}>{row[key]}</td>)}
                 </tr>
               ))}
             </tbody>
           </table>
+
+          <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            <button onClick={refreshTable} className="custom-button">{t("refreshData")}</button>
+            <button onClick={selectAllRows} className="custom-button">{t("selectAll")}</button>
+            <button onClick={() => setSelectedRows([])} className="custom-button">{t("deselectAll")}</button>
+            <button onClick={goToPreviousTable} className="custom-button">{t("prevTable")}</button>
+            <button onClick={goToNextTable} className="custom-button">{t("nextTable")}</button>
+          </div>
         </div>
       </div>
     </>

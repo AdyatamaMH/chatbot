@@ -14,5 +14,7 @@
   "mysqlTableTitle": "Tabel MySQL",
   "refreshData": "Memperbarui Data",
   "selectAll": "Pilih Semua",
-  "deselectAll": "Batalkan Pilihan"
+  "deselectAll": "Batalkan Pilihan",
+  "prevTable": "Tabel Sebelumnya",
+  "nextTable": "Tabel Berikutnya"
 }

@@ -13,7 +13,7 @@
     "backToMenu": "Back to Menu",
     "mysqlTableTitle": "MySQL Table",
     "refreshData": "Refresh Data",
-    "selectAll": "Select All",
-    "deselectAll": "Deselect All"
+    "prevTable": "Previous Table",
+    "nextTable": "Next Table"
 
   }

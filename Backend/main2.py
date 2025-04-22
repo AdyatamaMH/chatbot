@@ -17,6 +17,7 @@ DB_CONFIG = {
 }
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -38,27 +39,49 @@ def get_db_connection():
         print("Database connection error:", err)
         return None
 
-# Endpoint: Fetch all MySQL rows
-@app.get("/get_mysql_data")
-def get_mysql_data():
+# ✅ Endpoint: Get list of tables
+@app.get("/get_table_list")
+def get_table_list():
+    conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Could not connect to database.")
+    
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SHOW TABLES")
+        tables = [row[0] for row in cursor.fetchall()]
+        return tables
+    finally:
+        cursor.close()
+        conn.close()
+
+# ✅ Endpoint: Get data from specific table
+@app.get("/get_mysql_data/{table_name}")
+def get_mysql_data(table_name: str):
     conn = get_db_connection()
     if not conn:
         raise HTTPException(status_code=500, detail="Could not connect to database.")
 
     cursor = conn.cursor(dictionary=True)
     try:
-        cursor.execute("SELECT actor_id, first_name, last_name, last_update FROM actor")
+        cursor.execute(f"SELECT * FROM `{table_name}` LIMIT 100")
         results = cursor.fetchall()
+
+        # Ensure each row has an "id" field for frontend selection
+        if results and "id" not in results[0]:
+            for i, row in enumerate(results):
+                row["id"] = i  # fallback id
         return results
     finally:
         cursor.close()
         conn.close()
 
+# ✅ Query Model Schema
 class QueryRequest(BaseModel):
     query: str
-    selectedRows: List[Dict] 
+    selectedRows: List[Dict]
 
-# Endpoint: Chat + selected data → Mistral
+# ✅ Endpoint: Query with context
 @app.post("/query_mysql_ai")
 def query_mysql_ai(request: QueryRequest):
     if not request.query:
@@ -80,7 +103,6 @@ Question:
 {request.query}
 """
 
-    # Send to Ollama (Mistral)
     try:
         response = requests.post("http://localhost:11434/api/generate", json={
             "model": "mistral",
