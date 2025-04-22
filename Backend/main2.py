@@ -39,7 +39,7 @@ def get_db_connection():
         print("Database connection error:", err)
         return None
 
-# ✅ Endpoint: Get list of tables
+
 @app.get("/get_table_list")
 def get_table_list():
     conn = get_db_connection()
@@ -55,7 +55,7 @@ def get_table_list():
         cursor.close()
         conn.close()
 
-# ✅ Endpoint: Get data from specific table
+
 @app.get("/get_mysql_data/{table_name}")
 def get_mysql_data(table_name: str):
     conn = get_db_connection()
@@ -70,7 +70,7 @@ def get_mysql_data(table_name: str):
         # Ensure each row has an "id" field for frontend selection
         if results and "id" not in results[0]:
             for i, row in enumerate(results):
-                row["id"] = i  # fallback id
+                row["id"] = i
         return results
     finally:
         cursor.close()
@@ -81,7 +81,7 @@ class QueryRequest(BaseModel):
     query: str
     selectedRows: List[Dict]
 
-# ✅ Endpoint: Query with context
+
 @app.post("/query_mysql_ai")
 def query_mysql_ai(request: QueryRequest):
     if not request.query:
