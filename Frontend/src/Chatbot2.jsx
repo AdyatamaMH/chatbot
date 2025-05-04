@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import ReactMarkdown from "react-markdown";
 import './styles2/2/layout.css';
 import './styles2/2/chatbox.css';
 import './styles2/2/buttons.css';
@@ -140,7 +141,9 @@ const Chatbot = () => {
                 key={index}
                 className={`custom-message ${msg.sender === "user" ? "user-message" : "bot-message"}`}
               >
-                <div className="custom-bubble">{msg.text}</div>
+                <div className="custom-bubble">
+                  {msg.sender === "bot" ? <ReactMarkdown>{msg.text}</ReactMarkdown> : msg.text}
+                </div>
               </div>
             ))}
             {isLoading && (
@@ -198,7 +201,8 @@ const Chatbot = () => {
                   </td>
                   {Object.keys(row)
                     .filter(key => key !== "id")
-                    .map((key) => <td key={key}>{row[key]}</td>)}
+                    .map((key) => <td key={key}>{row[key]}</td>)
+                  }
                 </tr>
               ))}
             </tbody>
