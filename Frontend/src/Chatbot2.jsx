@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
+import MyChartComponent from "./MyChartComponent";
+
 import './styles2/2/layout.css';
 import './styles2/2/chatbox.css';
 import './styles2/2/buttons.css';
@@ -62,29 +64,6 @@ const Chatbot = () => {
     setSelectedRows(tableData);
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
-    const newMessages = [...messages, { sender: "user", text: input }];
-    setMessages(newMessages);
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      const response = await axios.post("http://localhost:8000/query_mysql_ai", {
-        query: input,
-        selectedRows: selectedRows
-      });
-
-      const botResponse = response.data.response || t("noResponseMessage");
-      setMessages([...newMessages, { sender: "bot", text: botResponse }]);
-    } catch (error) {
-      console.error("Error fetching response:", error);
-      setMessages([...newMessages, { sender: "bot", text: t("errorMessage") }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const toggleLanguage = () => {
     const newLang = i18n.language === "id" ? "en" : "id";
     i18n.changeLanguage(newLang);
@@ -111,6 +90,36 @@ const Chatbot = () => {
   const goToPreviousTable = () => {
     if (tableList.length > 0) {
       setCurrentTableIndex((prev) => (prev - 1 + tableList.length) % tableList.length);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+    const newMessages = [...messages, { sender: "user", text: input }];
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post("http://localhost:8000/query_mysql_ai", {
+        query: input,
+        selectedRows: selectedRows
+      });
+
+      const { response: botText, chartData, imageBase64 } = response.data;
+
+      const botMessage = chartData
+        ? { sender: "bot", chartData }
+        : imageBase64
+          ? { sender: "bot", imageBase64 }
+          : { sender: "bot", text: botText || t("noResponseMessage") };
+
+      setMessages([...newMessages, botMessage]);
+    } catch (error) {
+      console.error("Error fetching response:", error);
+      setMessages([...newMessages, { sender: "bot", text: t("errorMessage") }]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,7 +151,23 @@ const Chatbot = () => {
                 className={`custom-message ${msg.sender === "user" ? "user-message" : "bot-message"}`}
               >
                 <div className="custom-bubble">
-                  {msg.sender === "bot" ? <ReactMarkdown>{msg.text}</ReactMarkdown> : msg.text}
+                  {msg.text && (msg.sender === "bot"
+                    ? <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    : msg.text)}
+
+                  {msg.chartData && (
+                    <div style={{ maxWidth: "100%" }}>
+                      <MyChartComponent data={msg.chartData} />
+                    </div>
+                  )}
+
+                  {msg.imageBase64 && (
+                    <img
+                      src={`data:image/png;base64,${msg.imageBase64}`}
+                      alt="Graph"
+                      style={{ maxWidth: "100%", marginTop: "10px" }}
+                    />
+                  )}
                 </div>
               </div>
             ))}
