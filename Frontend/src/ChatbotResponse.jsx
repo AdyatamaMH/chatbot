@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import axios from "axios";
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
+import ReactMarkdown from "react-markdown";
+
 import './styles/1/base.css';
 import './styles/1/theme.css';
 import './styles/1/layout.css';
@@ -17,7 +19,7 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState(null);
-  const { t, i18n } = useTranslation(); 
+  const { t, i18n } = useTranslation();
 
   // Language
   useEffect(() => {
@@ -75,7 +77,7 @@ const Chatbot = () => {
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "id" ? "en" : "id";
-    i18n.changeLanguage(newLang); 
+    i18n.changeLanguage(newLang);
   };
 
   const toggleTheme = () => {
@@ -94,7 +96,7 @@ const Chatbot = () => {
           </button>
         </div>
       </div>
-  
+
       {/* Main Chatbot Container */}
       <div className="container" style={{ marginTop: "60px" }}>
         {/* Header Section */}
@@ -104,7 +106,7 @@ const Chatbot = () => {
             <h2 className="title">{t("chatbotTitle")}</h2>
           </div>
         </div>
-  
+
         {/* Chatbox Section */}
         <div className="chatbox">
           {messages.map((msg, index) => (
@@ -122,7 +124,7 @@ const Chatbot = () => {
                   color: msg.sender === "user" ? "#fff" : "#000",
                 }}
               >
-                {msg.text}
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
               </div>
             </div>
           ))}
@@ -134,25 +136,25 @@ const Chatbot = () => {
             </div>
           )}
         </div>
-  
+
         {/* Input and File Upload Section */}
         <div className="input-container">
           <div className="file-upload">
-            <input 
-              type="file" 
-              accept=".csv" 
-              onChange={handleFileUpload} 
-              id="file-input" 
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileUpload}
+              id="file-input"
             />
-            <button 
-              onClick={() => document.getElementById("file-input").click()} 
+            <button
+              onClick={() => document.getElementById("file-input").click()}
               className="upload-icon-button"
               disabled={isUploading}
             >
               📂
             </button>
           </div>
-  
+
           <input
             type="text"
             placeholder={t("placeholder")}
@@ -161,7 +163,7 @@ const Chatbot = () => {
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             className="input"
           />
-  
+
           <button onClick={handleSend} className="button" disabled={isLoading}>
             {isLoading ? t("sending") + "..." : t("sendButton")}
           </button>
