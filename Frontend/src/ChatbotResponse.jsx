@@ -13,7 +13,6 @@ import './styles/1/inputs.css';
 import './styles/1/file-upload.css';
 
 const Chatbot = () => {
-  const [theme, setTheme] = useState("light");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -21,15 +20,9 @@ const Chatbot = () => {
   const [file, setFile] = useState(null);
   const { t, i18n } = useTranslation();
 
-  // Language
   useEffect(() => {
     setMessages([{ sender: "bot", text: t("welcomeMessage") }]);
   }, [t]);
-
-  // Initial theme
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -80,10 +73,6 @@ const Chatbot = () => {
     i18n.changeLanguage(newLang);
   };
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
-
   return (
     <>
       {/* Top Navigation Bar */}
@@ -91,9 +80,6 @@ const Chatbot = () => {
         <Link to="/" className="button">{t("backToMenu")}</Link>
         <div className="controls">
           <button onClick={toggleLanguage} className="button">{t("switchLanguage")}</button>
-          <button onClick={toggleTheme} className="button">
-            {theme === "light" ? "Dark Mode" : "Light Mode"}
-          </button>
         </div>
       </div>
 

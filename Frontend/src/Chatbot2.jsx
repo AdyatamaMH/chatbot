@@ -4,6 +4,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
 import MyChartComponent from "./MyChartComponent";
+import MySQLCredentialsModal from "./MySQLCredentialsModal";
 
 import './styles2/2/layout.css';
 import './styles2/2/chatbox.css';
@@ -12,7 +13,6 @@ import './styles2/2/inputs.css';
 import './styles2/2/table.css';
 
 const Chatbot = () => {
-  const [theme, setTheme] = useState("light");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -22,14 +22,12 @@ const Chatbot = () => {
   const [tableList, setTableList] = useState([]);
   const [currentTableIndex, setCurrentTableIndex] = useState(0);
 
+  const [showCredentials, setShowCredentials] = useState(false);
+
   useEffect(() => {
     setMessages([{ sender: "bot", text: t("welcomeMessage") }]);
     fetchTableList();
   }, [t]);
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
 
   useEffect(() => {
     if (tableList.length > 0) fetchTableData(tableList[currentTableIndex]);
@@ -69,10 +67,6 @@ const Chatbot = () => {
     i18n.changeLanguage(newLang);
   };
 
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === "light" ? "dark" : "light"));
-  };
-
   const handleRowSelect = (row) => {
     setSelectedRows((prev) =>
       prev.some((r) => r.id === row.id)
@@ -99,22 +93,22 @@ const Chatbot = () => {
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
-  
+
     try {
       const response = await axios.post("http://localhost:8000/query_mysql_ai", {
         query: input,
         selectedRows: selectedRows
       });
-  
+
       const { response: botText, chartData, imageBase64 } = response.data;
-  
+
       const botMessage = {
         sender: "bot",
         text: botText || t("noResponseMessage"),
         chartData: chartData || null,
         imageBase64: imageBase64 || null
       };
-  
+
       setMessages([...newMessages, botMessage]);
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -123,18 +117,28 @@ const Chatbot = () => {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <>
       <div className="custom-top-bar">
         <Link to="/" className="custom-button">{t("backToMenu")}</Link>
         <div className="custom-controls">
           <button onClick={toggleLanguage} className="custom-button">{t("switchLanguage")}</button>
-          <button onClick={toggleTheme} className="custom-button">
-            {theme === "light" ? "Dark Mode" : "Light Mode"}
+          <button onClick={() => setShowCredentials(!showCredentials)} className="custom-button">
+            {showCredentials ? "Hide Credentials" : "Edit MySQL Credentials"}
           </button>
         </div>
       </div>
+
+      {showCredentials && (
+  <MySQLCredentialsModal
+    onSuccess={() => {
+      fetchTableList();
+      setShowCredentials(false);
+    }}
+    onCancel={() => setShowCredentials(false)}
+  />
+)}
 
       <div className="custom-split-container">
         <div className="custom-chat-container">
