@@ -139,13 +139,13 @@ def generate_base64_image(rows: List[Dict]) -> str:
     plt.savefig(buffer, format="png")
     plt.close()
     buffer.seek(0)
-    image_base64 = base64.b64encode(buffer.read()).decode("utf-8")
-    return image_base64
+    return base64.b64encode(buffer.read()).decode("utf-8")
 
 @app.post("/query_mysql_ai")
 def query_mysql_ai(request: QueryRequest):
     if not request.query:
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
+
     if not request.selectedRows:
         context = "No data was selected."
     else:
@@ -154,12 +154,28 @@ def query_mysql_ai(request: QueryRequest):
             for i, row in enumerate(request.selectedRows)
         ]
         context = "\n".join(context_lines)
+
+    def clean_query_for_ai(query: str) -> str:
+        replacements = {
+            "chart": "summary",
+            "graph": "summary",
+            "plot": "summary",
+            "visualize": "analyze",
+            "visualization": "summary"
+        }
+        for word, replacement in replacements.items():
+            query = query.replace(word, replacement)
+        return query
+
+    cleaned_query = clean_query_for_ai(request.query.lower())
+
     prompt = f"""Context:
 {context}
 
 Question:
-{request.query}
+{cleaned_query}
 """
+
     try:
         response = requests.post("http://localhost:11434/api/generate", json={
             "model": "mistral",
@@ -170,9 +186,11 @@ Question:
         ai_response = response.json().get("response", "No response from Mistral.")
     except Exception:
         raise HTTPException(status_code=500, detail="AI model error.")
-    include_chart = "chart" in request.query.lower()
-    chart_data = generate_sample_chart_data(request.selectedRows) if include_chart else None
-    image_base64 = generate_base64_image(request.selectedRows) if "graph" in request.query.lower() else None
+
+    query_lower = request.query.lower()
+    chart_data = generate_sample_chart_data(request.selectedRows) if "chart" in query_lower else None
+    image_base64 = generate_base64_image(request.selectedRows) if "graph" in query_lower else None
+
     return {
         "response": ai_response,
         "chartData": chart_data,

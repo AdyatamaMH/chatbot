@@ -99,21 +99,22 @@ const Chatbot = () => {
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
-
+  
     try {
       const response = await axios.post("http://localhost:8000/query_mysql_ai", {
         query: input,
         selectedRows: selectedRows
       });
-
+  
       const { response: botText, chartData, imageBase64 } = response.data;
-
-      const botMessage = chartData
-        ? { sender: "bot", chartData }
-        : imageBase64
-          ? { sender: "bot", imageBase64 }
-          : { sender: "bot", text: botText || t("noResponseMessage") };
-
+  
+      const botMessage = {
+        sender: "bot",
+        text: botText || t("noResponseMessage"),
+        chartData: chartData || null,
+        imageBase64: imageBase64 || null
+      };
+  
       setMessages([...newMessages, botMessage]);
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -122,7 +123,7 @@ const Chatbot = () => {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <>
       <div className="custom-top-bar">
