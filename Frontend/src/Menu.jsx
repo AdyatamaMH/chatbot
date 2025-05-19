@@ -5,7 +5,7 @@ import './styles/menu.css';
 const Menu = () => {
   return (
     <div className="menu-container">
-      <h1>Welcome to the Jago Menu</h1>
+      <h1>Welcome to the Menu</h1>
       <p>Select an option:</p>
       <ul>
         <li>

@@ -60,8 +60,8 @@ const MySQLCredentialsModal = ({ onSuccess, onCancel }) => {
             className="modal-input"
           />
           <div className="modal-button-group">
-            <button type="submit" className="modal-button">Save</button>
             <button type="button" onClick={onCancel} className="modal-button cancel-button">Cancel</button>
+            <button type="submit" className="modal-button">Save</button>
           </div>
         </form>
       </div>
