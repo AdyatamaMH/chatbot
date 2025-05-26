@@ -1,5 +1,5 @@
 {
-    "welcomeMessage": "Hello! I am Chatbot Jago, your smart assistant for financial data analysis.",
+    "welcomeMessage": "Hello! I am Chatbot, your smart assistant for financial data analysis.",
     "responseMessage": "Response: {{response}}\nContext: {{context}}",
     "errorMessage": "Sorry, an error occurred while processing your request. Please try again later.",
     "placeholder": "Enter a question, I will help analyze it.",
@@ -8,8 +8,8 @@
     "uploadSuccessMessage": "File uploaded and indexed successfully!",
     "uploadErrorMessage": "Failed to upload and process the file.",
     "loadingMessage": "Processing...",
-    "chatbotTitle"  : "Jago Chatbot CSV",
-    "chatbotTitle2"  : "Jago Chatbot MySQL",
+    "chatbotTitle"  : "Chatbot CSV",
+    "chatbotTitle2"  : "Chatbot MySQL",
     "backToMenu": "Back to Menu",
     "mysqlTableTitle": "MySQL Table",
     "refreshData": "Refresh Data",

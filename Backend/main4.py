@@ -261,12 +261,15 @@ def gen_image(rows: List[Dict], user_query: str = "") -> str:
 def query_mysql_ai(req: MySQLQuery):
     if not req.query:
         raise HTTPException(400, "Empty query")
+
     ctx = "\n".join(
         f"Row {i+1}: " + ", ".join(f"{k}: {v}" for k, v in row.items())
         for i, row in enumerate(req.selectedRows)
     ) or "No data selected."
+
     cleaned = re.sub(r"\b(chart|graph|plot|visualization)\b", "summary", req.query, flags=re.IGNORECASE)
     prompt = f"Context:\n{ctx}\n\nQuestion:\n{cleaned}"
+
     try:
         r = requests.post("http://localhost:11434/api/generate", json={
             "model": "mistral",
@@ -277,10 +280,13 @@ def query_mysql_ai(req: MySQLQuery):
         ai_resp = r.json().get("response", "")
     except:
         raise HTTPException(500, "AI error")
-    chart = gen_chart_data(req.selectedRows, req.query)
-    img = gen_image(req.selectedRows, req.query)
+
+    user_query_lower = req.query.lower()
+    return_chart = "chart" in user_query_lower
+    return_graph = "graph" in user_query_lower
+
     return {
         "response": ai_resp,
-        "chartData": chart,
-        "imageBase64": img
+        "chartData": gen_chart_data(req.selectedRows, req.query) if return_chart else None,
+        "imageBase64": gen_image(req.selectedRows, req.query) if return_graph else None
     }

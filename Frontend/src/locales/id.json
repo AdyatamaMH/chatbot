@@ -1,5 +1,5 @@
 {
-  "welcomeMessage": "Halo! Saya adalah Chatbot Jago, asisten cerdas yang membantu Anda menganalisis data keuangan.",
+  "welcomeMessage": "Halo! Saya adalah Chatbot, asisten cerdas yang membantu Anda menganalisis data keuangan.",
   "responseMessage": "Respon: {{response}}\nKonteks: {{context}}",
   "errorMessage": "Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi nanti.",
   "placeholder": "Masukkan pertanyaan, saya akan membantu menganalisisnya.",
@@ -8,8 +8,8 @@
   "uploadSuccessMessage": "File berhasil diunggah dan diindeks!",
   "uploadErrorMessage": "Gagal mengunggah dan memproses file.",
   "loadingMessage": "Sedang diproses...",
-  "chatbotTitle": "Chatbot Jago CSV",
-  "chatbotTitle2": "Chatbot Jago MySQL",
+  "chatbotTitle": "Chatbot CSV",
+  "chatbotTitle2": "Chatbot MySQL",
   "backToMenu": "Kembali ke Menu",
   "mysqlTableTitle": "Tabel MySQL",
   "refreshData": "Memperbarui Data",

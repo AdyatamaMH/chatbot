@@ -88,7 +88,7 @@ const Chatbot = () => {
         {/* Header Section */}
         <div className="header">
           <div className="title-container">
-            <img src="/pictures/jago-icon.png" alt="Jago Icon" className="icon" />
+            <img src="/pictures/icon.png" alt="Icon" className="icon" />
             <h2 className="title">{t("chatbotTitle")}</h2>
           </div>
         </div>

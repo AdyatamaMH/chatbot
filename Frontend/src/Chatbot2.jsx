@@ -144,7 +144,7 @@ const Chatbot = () => {
         <div className="custom-chat-container">
           <div className="custom-header">
             <div className="custom-title-container">
-              <img src="/pictures/jago-icon.png" alt="Jago Icon" className="custom-icon" />
+              <img src="/pictures/icon.png" alt="Icon" className="custom-icon" />
               <h2 className="custom-title">{t("chatbotTitle2")}</h2>
             </div>
           </div>
