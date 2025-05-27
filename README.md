@@ -1,4 +1,4 @@
-# AI Chatbot with MySQL & CSV Data Support
+# AI Chatbot
 
 This project is a full-stack chatbot interface that allows users to interact with MySQL databases and uploaded CSV files using natural language which in this case uses Mistral. The backend uses FastAPI and Ollama with Mistral for LLM responses, and supports both dynamic charting and static graph generation via `matplotlib`.
 
