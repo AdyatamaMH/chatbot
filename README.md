@@ -71,7 +71,8 @@ If you selected **CSV file**:
 
 ---
 
-If you selected **MySQL**:
+
+If you selected **MySQL**, you’ll need a running MySQL server and also MySQL Workbench to make it easier for the user.
 ![image1](images/image3.png)
 - You'll need to input your **host, user, password, and database name**.
 ![image1](images/image4.png)
