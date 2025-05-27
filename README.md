@@ -83,5 +83,3 @@ If you selected **MySQL**:
   - `"Summarize the differences between these rows"`)
 
 ---
-=======
->>>>>>> de8e5788cd72c9d23d5f1199d4228cd2ec1c74c5
