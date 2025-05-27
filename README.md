@@ -73,12 +73,17 @@ If you selected **CSV file**:
 
 
 If you selected **MySQL**, you’ll need a running MySQL server and also MySQL Workbench to make it easier for the user.
+
 ![image1](images/image3.png)
 - You'll need to input your **host, user, password, and database name**.
+
 ![image1](images/image4.png)
 ![image1](images/image5.png)
+
 - Once connected, a table viewer will appear on the right.
+
 ![image1](images/image6.png)
+
 - Select one or more rows, then type a question (e.g.:
   - `"Show me a chart of store_sales"`
   - `"Summarize the differences between these rows"`)
