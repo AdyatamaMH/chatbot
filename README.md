@@ -42,6 +42,7 @@ Start the backend server using Uvicorn:
 uvicorn main4:app --reload
 ```
 Make sure this runs in the same directory as your main4.py file.
+<<<<<<< HEAD
 
 ## Tutorial on how the program works
 
@@ -82,3 +83,5 @@ If you selected **MySQL**:
   - `"Summarize the differences between these rows"`)
 
 ---
+=======
+>>>>>>> de8e5788cd72c9d23d5f1199d4228cd2ec1c74c5
