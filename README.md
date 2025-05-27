@@ -85,7 +85,7 @@ If you selected **MySQL**, you’ll need a running MySQL server and also MySQL W
 ![image1](images/image6.png)
 
 - Select one or more rows, then type a question (e.g.:
-  - `"Show me a chart of store_sales"`
+  - `"Show me a graph of the selected rows between (collumn 1) and (collumn 2)"`
   - `"Summarize the differences between these rows"`)
 
 ---
