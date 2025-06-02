@@ -4,7 +4,7 @@ This project is a full-stack chatbot interface that allows users to interact wit
 
 ---
 
-## ✨ Features
+## Features
 
 - Natural language interface for MySQL or CSV data
 - MySQL table/row selection and RAG-like AI context summarization
