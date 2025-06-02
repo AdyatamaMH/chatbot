@@ -1,5 +1,5 @@
 {
-    "welcomeMessage": "Hello! I am Chatbot, your smart assistant for financial data analysis.",
+    "welcomeMessage": "Hello! I am Chatbot, your smart assistant for data analysis.",
     "responseMessage": "Response: {{response}}\nContext: {{context}}",
     "errorMessage": "Sorry, an error occurred while processing your request. Please try again later.",
     "placeholder": "Enter a question, I will help analyze it.",

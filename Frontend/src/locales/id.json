@@ -1,5 +1,5 @@
 {
-  "welcomeMessage": "Halo! Saya adalah Chatbot, asisten cerdas yang membantu Anda menganalisis data keuangan.",
+  "welcomeMessage": "Halo! Saya adalah Chatbot, asisten cerdas yang membantu Anda menganalisa data.",
   "responseMessage": "Respon: {{response}}\nKonteks: {{context}}",
   "errorMessage": "Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi nanti.",
   "placeholder": "Masukkan pertanyaan, saya akan membantu menganalisisnya.",
