@@ -42,7 +42,7 @@ Start the backend server using Uvicorn:
 uvicorn main4:app --reload
 ```
 Make sure this runs in the same directory as your main4.py file.
-<<<<<<< HEAD
+
 
 ## Tutorial on how the program works
 
