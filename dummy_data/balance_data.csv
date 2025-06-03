@@ -1,7 +1,7 @@
 business_date,business_unit,customer_flagged,partner_name,balance_tier_description,no_of_customers,total_balance,unique_id,record_inserted_at
 
-2025-02-06,Bank Jago,True,Partner A,T09: 1B to <2B IDR,79,1561497776.84,UID-00003,2025-01-14 13:27:45
-2025-01-12,Bank Jago,False,Partner C,T10: >=2B IDR,159,9810677886.97,UID-00004,2025-02-28 09:12:56
+2025-02-06,BRI,True,Partner A,T09: 1B to <2B IDR,79,1561497776.84,UID-00003,2025-01-14 13:27:45
+2025-01-12,BRI,False,Partner C,T10: >=2B IDR,159,9810677886.97,UID-00004,2025-02-28 09:12:56
 2025-02-01,Bank Mandiri,False,Partner D,T07: 100M to <500M IDR,378,156023444.35,UID-00005,2025-03-05 18:43:22
 2025-02-02,Bank America,False,Partner O,T00: 0 IDR,147,0.0,UID-00006,2025-04-19 03:58:11
 2025-01-13,Unit H,False,Partner P,T04: 1M to <5M IDR,316,1947539.17,UID-00007,2025-05-22 21:34:59
