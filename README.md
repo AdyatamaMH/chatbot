@@ -63,7 +63,8 @@ Click the appropriate button to continue.
 If you selected **CSV file**:
 
  **Important Note**
- for the csv function seamlessly it needs to have the name of the collumns like shown in the "dummy_data" folder in this repository.
+ 
+ for the csv section to function seamlessly it needs to have the name of the collumns like shown in the "dummy_data" folder in this repository.
 
 
 ![image1](images/image2.png)
